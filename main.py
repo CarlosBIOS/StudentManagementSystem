@@ -62,7 +62,6 @@ class InsertDialog(QDialog):
         self.setFixedHeight(300)
 
         layout = QVBoxLayout()
-
         student_name = QLineEdit()
         student_name.setPlaceholderText('Name')
         layout.addWidget(student_name)
