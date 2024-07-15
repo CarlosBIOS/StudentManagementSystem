@@ -58,14 +58,16 @@ class MainWindow(QMainWindow):
 
         connection.close()
 
-    def insert(self):
+    @staticmethod
+    def insert():
         dialog = InsertDialog()
         dialog.exec()
 
     def about(self):
         pass
 
-    def search(self):
+    @staticmethod
+    def search():
         dialog = SearchDialog()
         dialog.exec()
 
@@ -148,8 +150,8 @@ class SearchDialog(QDialog):
         name: str = self.student_name.text()
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
-        result = cursor.execute('SELECT * FROM students WHERE name = ?', (name,))
-        rows = list(result)
+        # result = cursor.execute('SELECT * FROM students WHERE name = ?', (name,))
+        # rows = list(result)
         items = main_Window.table.findItems(name, Qt.MatchFlag.MatchFixedString)
         for item in items:
             main_Window.table.item(item.row(), 1).setSelected(True)
