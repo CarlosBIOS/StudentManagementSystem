@@ -1,6 +1,6 @@
 # Primeiro abri o terminal e digitei: pip install pyqt6
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QLineEdit,
-                             QComboBox, QPushButton, QToolBar, QStatusBar)
+                             QComboBox, QPushButton, QToolBar, QStatusBar, QGridLayout, QLabel, QMessageBox)
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import Qt
 import sqlite3
@@ -17,8 +17,8 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(800, 600)
 
         file_menu_item = self.menuBar().addMenu('&File')
-        help_menu_item = self.menuBar().addMenu('&Help')
         edit_menu_item = self.menuBar().addMenu('&Edit')
+        help_menu_item = self.menuBar().addMenu('&Help')
 
         add_student_action = QAction(QIcon('icons/add.png'), 'Add Student', self)
         add_student_action.triggered.connect(self.insert)
@@ -71,8 +71,10 @@ class MainWindow(QMainWindow):
         dialog = InsertDialog()
         dialog.exec()
 
+    @staticmethod
     def about(self):
-        pass
+        about = AboutDialog()
+        about.exec()
 
     @staticmethod
     def search():
@@ -84,7 +86,7 @@ class MainWindow(QMainWindow):
         edit_button.clicked.connect(self.edit)
 
         delete_button = QPushButton('Delete Record')
-        delete_button.clicked.connect(self.edit)
+        delete_button.clicked.connect(self.delete)
 
         children = self.findChildren(QPushButton)
         if children:
@@ -257,20 +259,47 @@ class DeleteDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Delete Student Data')
-        self.setFixedWidth(300)
-        self.setFixedHeight(300)
 
-        layout = QVBoxLayout()
+        layout = QGridLayout()
+        confirmation = QLabel('Are you sure do you want to delete?')
 
-        self.student_name = QLineEdit()
-        self.student_name.setPlaceholderText('Student Name')
-        layout.addWidget(self.student_name)
+        yes = QPushButton('Yes')
+        no = QPushButton('No')
 
-        button = QPushButton('Search')
-        button.clicked.connect(self.search_student)
-        layout.addWidget(button)
+        layout.addWidget(confirmation, 0, 0, 1, 2)
+        layout.addWidget(yes, 1, 0)
+        layout.addWidget(no, 1, 1)
 
         self.setLayout(layout)
+
+        yes.clicked.connect(self.delete_student)
+
+    def delete_student(self):
+        index = main_Window.table.currentRow()
+        student_id = main_Window.table.item(index, 0).text()
+
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute('DELETE FROM students WHERE id = ?', (student_id, ))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        main_Window.load_data()
+
+        self.close()
+
+        confirmation_widget = QMessageBox()
+        confirmation_widget.setWindowTitle('Sucess')
+        confirmation_widget.setText('The record was deleted succesfully!')
+        confirmation_widget.exec()
+
+
+class AboutDialog(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('About')
+        content: str = "This was an app that I created in the course. It's basically an app about Student Management"
+        self.setText(content)
 
 
 if __name__ == '__main__':
