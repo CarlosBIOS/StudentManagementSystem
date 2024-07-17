@@ -302,7 +302,30 @@ class AboutDialog(QMessageBox):
         self.setText(content)
 
 
+def create_database():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE "students" (
+        "id"	INTEGER,
+        "name"	TEXT,
+        "course"	TEXT,
+        "turma"	TEXT,
+        "mobile"	INTEGER,
+        "paimae"	TEXT,
+        PRIMARY KEY("id" AUTOINCREMENT)
+    );
+    """)
+
+    conn.commit()
+    conn.close()
+
+
 if __name__ == '__main__':
+    if not os.path.exists('database.db'):
+        create_database()
+
     app = QApplication(sys.argv)
     main_Window = MainWindow()
     main_Window.show()
