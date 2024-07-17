@@ -196,21 +196,50 @@ class SearchDialog(QDialog):
 class EditDialog(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Edit Student Data')
+        self.setWindowTitle('Update Student Data')
         self.setFixedWidth(300)
         self.setFixedHeight(300)
 
         layout = QVBoxLayout()
+        index: int = main_Window.table.currentRow()
 
-        self.student_name = QLineEdit()
+        student_name: str = main_Window.table.item(index, 1).text()
+        self.student_name = QLineEdit(student_name)
         self.student_name.setPlaceholderText('Student Name')
         layout.addWidget(self.student_name)
 
-        button = QPushButton('Search')
-        button.clicked.connect(self.search_student)
+        course_name = main_Window.table.item(index, 2).text()
+        self.courses_name = QComboBox()
+        courses = ['Biology', 'Math', 'Astronomy', 'Physics']
+        self.courses_name.addItems(courses)
+        self.courses_name.setCurrentText(course_name)
+        layout.addWidget(self.courses_name)
+
+        turma_name = main_Window.table.item(index, 3).text()
+        self.turma_name = QComboBox()
+        courses = ['A', 'B', 'C', 'D']
+        self.turma_name.addItems(courses)
+        self.courses_name.setCurrentText(turma_name)
+        layout.addWidget(self.turma_name)
+
+        phone_number: str = main_Window.table.item(index, 4).text()
+        self.phone_number = QLineEdit(phone_number)
+        self.phone_number.setPlaceholderText('Mobile')
+        layout.addWidget(self.phone_number)
+
+        pai_mae: str = main_Window.table.item(index, 5).text()
+        self.pai_mae = QLineEdit(pai_mae)
+        self.pai_mae.setPlaceholderText('Pai/Mãe')
+        layout.addWidget(self.pai_mae)
+
+        button = QPushButton('Update')
+        button.clicked.connect(self.update_student)
         layout.addWidget(button)
 
         self.setLayout(layout)
+
+    def update_student(self):
+        pass
 
 
 class DeleteDialog(QDialog):
@@ -239,3 +268,5 @@ if __name__ == '__main__':
     main_Window.show()
     main_Window.load_data()
     sys.exit(app.exec())
+
+# Estou no 10:28
