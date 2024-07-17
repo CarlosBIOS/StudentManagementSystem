@@ -203,6 +203,8 @@ class EditDialog(QDialog):
         layout = QVBoxLayout()
         index: int = main_Window.table.currentRow()
 
+        self.student_id = main_Window.table.item(index, 0).text()
+
         student_name: str = main_Window.table.item(index, 1).text()
         self.student_name = QLineEdit(student_name)
         self.student_name.setPlaceholderText('Student Name')
@@ -239,7 +241,16 @@ class EditDialog(QDialog):
         self.setLayout(layout)
 
     def update_student(self):
-        pass
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute('UPDATE students SET name = ?, course = ?, turma = ?, mobile= ?, paimae = ? WHERE id = ?',
+                       (self.student_name.text(), self.courses_name.itemText(self.courses_name.currentIndex()),
+                        self.turma_name.itemText(self.turma_name.currentIndex()), self.phone_number.text(),
+                        self.pai_mae.text(), self.student_id))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        main_Window.load_data()
 
 
 class DeleteDialog(QDialog):
@@ -268,5 +279,3 @@ if __name__ == '__main__':
     main_Window.show()
     main_Window.load_data()
     sys.exit(app.exec())
-
-# Estou no 10:28
