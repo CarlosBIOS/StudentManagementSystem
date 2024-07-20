@@ -134,7 +134,7 @@ class InsertDialog(QDialog):
         layout.addWidget(self.student_name)
 
         self.courses_name = QComboBox()
-        courses = ['Biology', 'Math', 'Astronomy', 'Physics']
+        courses = ['Biology', 'Math', 'Astronomy', 'Physics', 'Music']
         self.courses_name.addItems(courses)
         layout.addWidget(self.courses_name)
 
@@ -143,7 +143,7 @@ class InsertDialog(QDialog):
         self.turma_name.addItems(courses)
         layout.addWidget(self.turma_name)
 
-        self.phone_number = QLineEdit()
+        self.phone_number = QLineEdit('+351')
         self.phone_number.setPlaceholderText('Mobile')
         layout.addWidget(self.phone_number)
 
@@ -198,8 +198,8 @@ class SearchDialog(QDialog):
         name: str = self.student_name.text()
         connection = DataBaseConnection().connection()
         cursor = connection.cursor()
-        # result = cursor.execute('SELECT * FROM students WHERE name = ?', (name,))
-        # rows = list(result)
+        result = cursor.execute('SELECT * FROM students WHERE name = ?', (name,))
+        rows = list(result)
         items = main_Window.table.findItems(name, Qt.MatchFlag.MatchFixedString)
         for item in items:
             main_Window.table.item(item.row(), 1).setSelected(True)
@@ -227,7 +227,7 @@ class EditDialog(QDialog):
 
         course_name = main_Window.table.item(index, 2).text()
         self.courses_name = QComboBox()
-        courses = ['Biology', 'Math', 'Astronomy', 'Physics']
+        courses = ['Biology', 'Math', 'Astronomy', 'Physics', 'Music']
         self.courses_name.addItems(courses)
         self.courses_name.setCurrentText(course_name)
         layout.addWidget(self.courses_name)
