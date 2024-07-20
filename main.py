@@ -1,3 +1,5 @@
+# Sqlite é bom para desenvolvimento, mas se recomenda usar mySQL, pois é possível trabalhar com mais complexidade!!
+
 # Primeiro abri o terminal e digitei: pip install pyqt6
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QLineEdit,
                              QComboBox, QPushButton, QToolBar, QStatusBar, QGridLayout, QLabel, QMessageBox)
